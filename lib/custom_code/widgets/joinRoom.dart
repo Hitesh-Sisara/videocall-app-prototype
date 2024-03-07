@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:math';
 
+import 'package:call_prototype/custom_code/widgets/api.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -28,8 +28,6 @@ class _JoinRoomState extends State<JoinRoom> {
   String? roomCode;
   bool isLoading = false;
 
-  final managementToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3Nfa2V5IjoiNjVkZGU0ZTgxZDVmZDc0OWNkMWYxZjc4IiwidHlwZSI6Im1hbmFnZW1lbnQiLCJ2ZXJzaW9uIjoyLCJpYXQiOjE3MDk0Mzk1ODEsIm5iZiI6MTcwOTQzOTU4MSwiZXhwIjoxNzUyNjM5NTgxLCJqdGkiOiI1YjkwMjM1YS1kMDVmLTQwYjctYTAyNC0wYTFjMDY3OTUxMDYifQ.QuIPLguktiTejI0yt9TzlGtE_Led755jM2OzQ1jDkKE";
   @override
   void initState() {
     super.initState();

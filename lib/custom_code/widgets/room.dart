@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:call_prototype/custom_code/widgets/api.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -47,8 +48,6 @@ class _RoomState extends State<Room> {
   }
 
   Future<String?> createRoom(String username) async {
-    final managementToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3Nfa2V5IjoiNjVkZGU0ZTgxZDVmZDc0OWNkMWYxZjc4IiwidHlwZSI6Im1hbmFnZW1lbnQiLCJ2ZXJzaW9uIjoyLCJpYXQiOjE3MDk0Mzk1ODEsIm5iZiI6MTcwOTQzOTU4MSwiZXhwIjoxNzUyNjM5NTgxLCJqdGkiOiI1YjkwMjM1YS1kMDVmLTQwYjctYTAyNC0wYTFjMDY3OTUxMDYifQ.QuIPLguktiTejI0yt9TzlGtE_Led755jM2OzQ1jDkKE";
     final url = Uri.parse('https://api.100ms.live/v2/rooms');
 
     try {

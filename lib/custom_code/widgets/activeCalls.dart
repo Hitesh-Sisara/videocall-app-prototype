@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:call_prototype/custom_code/widgets/api.dart';
 import 'package:call_prototype/custom_code/widgets/joinRoom.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_theme.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_util.dart';
@@ -39,8 +40,6 @@ class ActiveSessionsList extends StatefulWidget {
 }
 
 class _ActiveSessionsListState extends State<ActiveSessionsList> {
-  final managementToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3Nfa2V5IjoiNjVkZGU0ZTgxZDVmZDc0OWNkMWYxZjc4IiwidHlwZSI6Im1hbmFnZW1lbnQiLCJ2ZXJzaW9uIjoyLCJpYXQiOjE3MDk0Mzk1ODEsIm5iZiI6MTcwOTQzOTU4MSwiZXhwIjoxNzUyNjM5NTgxLCJqdGkiOiI1YjkwMjM1YS1kMDVmLTQwYjctYTAyNC0wYTFjMDY3OTUxMDYifQ.QuIPLguktiTejI0yt9TzlGtE_Led755jM2OzQ1jDkKE";
   List<ActiveSession> activeSessions = [];
 
   bool isLoading = false;
