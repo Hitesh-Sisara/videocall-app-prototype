@@ -50,6 +50,9 @@ class _RecordingsPageState extends State<RecordingsPage> {
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: AppBar(
+          actions: [
+            // back button
+          ],
           backgroundColor: FlutterFlowTheme.of(context).primary,
           automaticallyImplyLeading: false,
           title: Text(

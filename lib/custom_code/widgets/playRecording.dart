@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'package:appinio_video_player/appinio_video_player.dart';
 import 'package:call_prototype/custom_code/widgets/api.dart';
+import 'package:call_prototype/flutter_flow/flutter_flow_theme.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_util.dart';
+import 'package:call_prototype/flutter_flow/flutter_flow_widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:video_player/video_player.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:video_player/video_player.dart';
 
 class PlayRecordingScreen extends StatefulWidget {
   final String recordingId;
@@ -16,10 +20,11 @@ class PlayRecordingScreen extends StatefulWidget {
 }
 
 class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
-  VideoPlayerController? _controller; // Made nullable
+  late VideoPlayerController _videoPlayerController;
+  late CustomVideoPlayerController _customVideoPlayerController;
   bool isLoading = true;
   String? videoUrl;
-  String? errorMessage; // Added to display error messages
+  String? errorMessage;
 
   @override
   void initState() {
@@ -39,7 +44,7 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
         final data = jsonDecode(response.body);
         videoUrl = data['url'];
         debugPrint('Video URL: $videoUrl');
-        initializeVideoPlayer(); // Moved initialization to a separate method
+        initializeVideoPlayer();
       } else {
         handleError('Failed to fetch video URL');
       }
@@ -49,17 +54,19 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
   }
 
   Future<void> initializeVideoPlayer() async {
-    try {
-      _controller = VideoPlayerController.network(videoUrl!)
+    if (videoUrl != null) {
+      _videoPlayerController = VideoPlayerController.network(videoUrl!)
         ..initialize().then((_) {
           setState(() {
             isLoading = false;
           });
+          _customVideoPlayerController = CustomVideoPlayerController(
+            context: context,
+            videoPlayerController: _videoPlayerController,
+          );
         }).catchError((error) {
           handleError('Failed to initialize video player: $error');
         });
-    } catch (e) {
-      handleError('Error initializing video player: $e');
     }
   }
 
@@ -68,14 +75,16 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
     showSnackbar(context, message);
     setState(() {
       isLoading = false;
-      errorMessage = message; // Set the error message
+      errorMessage = message;
     });
   }
 
   @override
   void dispose() {
-    _controller?.dispose(); // Use null-aware call
     super.dispose();
+
+    _customVideoPlayerController.dispose();
+    _videoPlayerController.dispose();
   }
 
   @override
@@ -94,12 +103,47 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : errorMessage != null
-              ? Center(
-                  child: Text(errorMessage!)) // Display error message if any
+              ? Center(child: Text(errorMessage!))
               : Center(
-                  child: AspectRatio(
-                    aspectRatio: _controller!.value.aspectRatio,
-                    child: VideoPlayer(_controller!),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CustomVideoPlayer(
+                        customVideoPlayerController:
+                            _customVideoPlayerController,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 50),
+                        child: FFButtonWidget(
+                          onPressed: videoUrl == null
+                              ? null
+                              : () => shareVideoLink(videoUrl!),
+                          text: 'Share Recording',
+                          options: FFButtonOptions(
+                            width: MediaQuery.sizeOf(context).width * 0.5,
+                            height: 40,
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+                            iconPadding:
+                                EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
+                                .override(
+                                  fontFamily: 'Readex Pro',
+                                  color: Colors.white,
+                                ),
+                            elevation: 3,
+                            borderSide: BorderSide(
+                              color: Colors.transparent,
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
     );
