@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:share_plus/share_plus.dart';
-import 'package:video_player/video_player.dart';
 
 class PlayRecordingScreen extends StatefulWidget {
   final String recordingId;
@@ -34,11 +33,14 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
 
   Future<void> fetchVideoUrl() async {
     try {
+      debugPrint('recordingId: ${widget.recordingId}');
       final response = await http.get(
         Uri.parse(
             'https://api.100ms.live/v2/recording-assets/${widget.recordingId}/presigned-url'),
         headers: {'Authorization': 'Bearer $managementToken'},
       );
+
+      debugPrint('Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

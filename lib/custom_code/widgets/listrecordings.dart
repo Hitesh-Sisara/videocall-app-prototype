@@ -60,7 +60,11 @@ class _RecordingsListState extends State<RecordingsList> {
         final recordingsData =
             (data['data'] as List<dynamic>).where((recording) {
           final metadata = recording['metadata'] as Map<String, dynamic>?;
-          return metadata == null || !metadata.containsKey('layer');
+          final path = recording['path'] as String?;
+          // Check if metadata does not contain 'layer' and path is not empty or null
+          return (metadata == null || !metadata.containsKey('layer')) &&
+              path != null &&
+              path.isNotEmpty;
         }).toList();
 
         final recordings = await Future.wait(
