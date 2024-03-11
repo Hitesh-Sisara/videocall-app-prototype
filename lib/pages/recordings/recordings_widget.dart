@@ -1,15 +1,17 @@
 import 'package:call_prototype/custom_code/widgets/activeCalls.dart';
+import 'package:call_prototype/custom_code/widgets/listrecordings.dart';
+import 'package:call_prototype/custom_code/widgets/recordings.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import 'package:flutter/material.dart';
 
-import 'create_call_model.dart';
-export 'create_call_model.dart';
+import 'Recording_model.dart';
+export 'Recording_model.dart';
 
-class CreateCallWidget extends StatefulWidget {
-  const CreateCallWidget({
+class RecordingsPage extends StatefulWidget {
+  const RecordingsPage({
     super.key,
     required this.username,
   });
@@ -17,10 +19,10 @@ class CreateCallWidget extends StatefulWidget {
   final String username;
 
   @override
-  State<CreateCallWidget> createState() => _CreateCallWidgetState();
+  State<RecordingsPage> createState() => _RecordingsPageState();
 }
 
-class _CreateCallWidgetState extends State<CreateCallWidget> {
+class _RecordingsPageState extends State<RecordingsPage> {
   late CreateCallModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -51,7 +53,7 @@ class _CreateCallWidgetState extends State<CreateCallWidget> {
           backgroundColor: FlutterFlowTheme.of(context).primary,
           automaticallyImplyLeading: false,
           title: Text(
-            'Create or join call',
+            'Recordings',
             style: FlutterFlowTheme.of(context).headlineMedium.override(
                   fontFamily: 'Outfit',
                   color: Colors.white,
@@ -68,19 +70,19 @@ class _CreateCallWidgetState extends State<CreateCallWidget> {
             children: [
               Container(
                 width: 428,
-                height: 60,
+                height: 100,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(5, 10, 5, 10),
+                      padding: EdgeInsetsDirectional.fromSTEB(5, 20, 5, 20),
                       child: Text(
                         'Welcome,',
                         textAlign: TextAlign.center,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'Readex Pro',
-                              fontSize: 22,
+                              fontSize: 25,
                             ),
                       ),
                     ),
@@ -92,42 +94,23 @@ class _CreateCallWidgetState extends State<CreateCallWidget> {
                       textAlign: TextAlign.center,
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily: 'Readex Pro',
-                            fontSize: 20,
+                            fontSize: 25,
                           ),
                     ),
                   ],
                 ),
               ),
               Text(
-                'Active calls',
+                'Available Recordings',
                 textAlign: TextAlign.center,
                 style: FlutterFlowTheme.of(context).bodyMedium.override(
                       fontFamily: 'Readex Pro',
-                      fontSize: 20,
+                      fontSize: 25,
                     ),
               ),
               Container(
-                  height: MediaQuery.sizeOf(context).height * 0.6,
-                  child: ActiveSessionsList(username: widget.username)),
-              Container(
-                width: MediaQuery.sizeOf(context).width * 0.5,
-                height: 40,
-                child: custom_widgets.CreateCall(
-                  width: MediaQuery.sizeOf(context).width * 0.5,
-                  height: 40,
-                  username: widget.username!,
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 20),
-                width: MediaQuery.sizeOf(context).width * 0.5,
-                height: 40,
-                child: custom_widgets.Recordings(
-                  width: MediaQuery.sizeOf(context).width * 0.5,
-                  height: 40,
-                  username: widget.username!,
-                ),
-              ),
+                  height: MediaQuery.sizeOf(context).height * 0.7,
+                  child: RecordingsList(username: widget.username)),
             ],
           ),
         ),
