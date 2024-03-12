@@ -32,7 +32,8 @@ class CreateCall extends StatefulWidget {
 }
 
 class _CreateCallState extends State<CreateCall> {
-  String? roomCode;
+  String? hostroomCode;
+  String? guestRoomCode;
   bool isLoading = false;
 
   @override
@@ -45,7 +46,7 @@ class _CreateCallState extends State<CreateCall> {
     try {
       final code = await createRoom(widget.username);
       setState(() {
-        roomCode = code;
+        hostroomCode = code;
       });
     } catch (error) {
       // Handle error appropriately
@@ -213,6 +214,7 @@ class _CreateCallState extends State<CreateCall> {
   @override
   Widget build(BuildContext context) {
     return FFButtonWidget(
+      showLoadingIndicator: isLoading,
       onPressed: () async {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => Room(username: widget.username)));
