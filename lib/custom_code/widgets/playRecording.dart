@@ -287,7 +287,6 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
                             text: localFilePath == null
                                 ? 'Download Recording'
                                 : 'Downloaded',
-                            value: isDownloading ? downloadProgress : null,
                             options: FFButtonOptions(
                               width: MediaQuery.of(context).size.width * 0.5,
                               height: 40,

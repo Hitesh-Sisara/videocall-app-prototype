@@ -4,6 +4,7 @@ import 'package:call_prototype/custom_code/widgets/api.dart';
 import 'package:call_prototype/custom_code/widgets/room.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_util.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_widgets.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
 // Imports custom functions
@@ -44,10 +45,7 @@ class _CreateCallState extends State<CreateCall> {
 
   void _fetchRoomCode() async {
     try {
-      final code = await createRoom(widget.username);
-      setState(() {
-        hostroomCode = code;
-      });
+      await createRoom(widget.username);
     } catch (error) {
       // Handle error appropriately
       setState(() {
@@ -56,7 +54,11 @@ class _CreateCallState extends State<CreateCall> {
     }
   }
 
-  Future<String?> createRoom(String username) async {
+  String generateRoomLink(String? code) {
+    return 'https://hit-livestream-1315.app.100ms.live/streaming/meeting/$code';
+  }
+
+  Future<void> createRoom(String username) async {
     final url = Uri.parse('https://api.100ms.live/v2/rooms');
 
     try {
@@ -99,20 +101,26 @@ class _CreateCallState extends State<CreateCall> {
               for (final code in roomCodeData['data']) {
                 if (code['role'] == 'host') {
                   setState(() {
-                    isLoading = false;
+                    hostroomCode = code['code']; // Set host room code
                   });
-                  return code['code']; // Return host room code
+                } else if (code['role'] == 'guest') {
+                  setState(() {
+                    guestRoomCode = code['code']; // Set guest room code
+                  });
                 }
               }
+
+              setState(() {
+                isLoading = false;
+              });
             } else {
               print(
-                  "Error fetching host room code: ${roomCodeResponse.statusCode}");
+                  "Error fetching room codes: ${roomCodeResponse.statusCode}");
               // Handle error appropriately (e.g., show a snackbar to the user)
               setState(() {
                 isLoading = false;
               });
             }
-
             // Return ID if room is already enabled
           } else {
             print("Room already exists but is disabled. Activating...");
@@ -175,16 +183,26 @@ class _CreateCallState extends State<CreateCall> {
 
             if (roomCodeResponse.statusCode == 200) {
               final roomCodeData = jsonDecode(roomCodeResponse.body);
+
               for (final code in roomCodeData['data']) {
                 if (code['role'] == 'host') {
                   setState(() {
-                    isLoading = false;
+                    hostroomCode = code['code']; // Set host room code
                   });
-                  return code['code']; // Return host room code
+                } else if (code['role'] == 'guest') {
+                  setState(() {
+                    guestRoomCode = code['code']; // Set guest room code
+                  });
                 }
               }
+
+              setState(() {
+                isLoading = false;
+              });
             } else {
-              print("Error creating room code: ${roomCodeResponse.body}");
+              print(
+                  "Error fetching room codes: ${roomCodeResponse.statusCode}");
+              // Handle error appropriately (e.g., show a snackbar to the user)
               setState(() {
                 isLoading = false;
               });
@@ -215,9 +233,93 @@ class _CreateCallState extends State<CreateCall> {
   Widget build(BuildContext context) {
     return FFButtonWidget(
       showLoadingIndicator: isLoading,
+      // onPressed: () async {
+      //   Navigator.of(context).push(MaterialPageRoute(
+      //       builder: (context) => Room(username: widget.username)));
+      // },
       onPressed: () async {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => Room(username: widget.username)));
+        showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return Container(
+              height: MediaQuery.sizeOf(context).height * 0.35,
+              width: MediaQuery.sizeOf(context).width,
+              padding: EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 40),
+                  Text(
+                    'Share link for non app user to join the call',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 40),
+                  FFButtonWidget(
+                    onPressed: () async {
+                      if (guestRoomCode != null) {
+                        final link = generateRoomLink(guestRoomCode);
+                        shareVideoLink(link);
+                      }
+                    },
+                    text: 'Share link',
+                    options: FFButtonOptions(
+                      width: MediaQuery.sizeOf(context).width * 0.5,
+                      height: 40,
+                      padding: EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+                      iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                      color: FlutterFlowTheme.of(context).primary,
+                      textStyle:
+                          FlutterFlowTheme.of(context).titleSmall.override(
+                                fontFamily: 'Readex Pro',
+                                color: Colors.white,
+                              ),
+                      elevation: 3,
+                      borderSide: BorderSide(
+                        color: Colors.transparent,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  SizedBox(height: 40),
+                  FFButtonWidget(
+                    onPressed: () async {
+                      if (hostroomCode != null) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Room(
+                                  username: widget.username,
+                                  roomcode: hostroomCode!,
+                                )));
+                      } else {
+                        showSnackbar(context, 'Error creating room. Try again.',
+                            duration: 3);
+                      }
+                    },
+                    text: 'Continue',
+                    options: FFButtonOptions(
+                      width: MediaQuery.sizeOf(context).width * 0.5,
+                      height: 40,
+                      padding: EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+                      iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                      color: FlutterFlowTheme.of(context).primary,
+                      textStyle:
+                          FlutterFlowTheme.of(context).titleSmall.override(
+                                fontFamily: 'Readex Pro',
+                                color: Colors.white,
+                              ),
+                      elevation: 3,
+                      borderSide: BorderSide(
+                        color: Colors.transparent,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
       },
       text: 'Create Call',
       options: FFButtonOptions(
@@ -239,4 +341,8 @@ class _CreateCallState extends State<CreateCall> {
       ),
     );
   }
+}
+
+Future<void> shareVideoLink(String url) async {
+  await Share.share(url);
 }

@@ -56,7 +56,7 @@ class _CallPageState extends State<CallPage> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        body: Room(username: widget.username),
+        body: Room(username: widget.username, roomcode: 'roomcode'),
       ),
     );
   }
