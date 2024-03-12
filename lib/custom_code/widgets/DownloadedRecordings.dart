@@ -41,17 +41,26 @@ class _DownloadedRecordingsScreenState
         itemCount: downloadedRecordings.length,
         itemBuilder: (context, index) {
           final recordingPath = downloadedRecordings[index];
-          return ListTile(
-            title: Text('Recording ${index + 1}'),
-            onTap: () {
-              print(
-                  'Navigating to PlayRecordingScreen with path: $recordingPath');
-
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => PlayRecordingScreen(
-                    recordingId: recordingPath, isLocalFile: true),
-              ));
-            },
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: ListTile(
+              title: Text(
+                'Recording ${index + 1}',
+                style: TextStyle(
+                    fontFamily: 'Readex Pro',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).primaryColor),
+              ),
+              trailing: Icon(Icons.arrow_forward,
+                  size: 30, color: Theme.of(context).primaryColor),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => PlayRecordingScreen(
+                      recordingId: recordingPath, isLocalFile: true),
+                ));
+              },
+            ),
           );
         },
       ),
