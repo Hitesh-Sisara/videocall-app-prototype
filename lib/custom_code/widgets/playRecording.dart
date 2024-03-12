@@ -56,12 +56,6 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
     }
   }
 
-  // Future<void> initializeLocalVideoPlayer() async {
-  //   final directory = await getApplicationDocumentsDirectory();
-  //   final filePath = '${directory.path}/${widget.recordingId}.mp4';
-  //   initializeVideoPlayer(filePath);
-  // }
-
   Future<void> initializeLocalVideoPlayer() async {
     if (widget.isLocalFile) {
       // Directly use the recordingId as it is already an absolute path
@@ -84,6 +78,7 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
 
     _videoPlayerController = VideoPlayerController.file(file)
       ..initialize().then((_) {
+        if (!mounted) return; // Check if the widget is still in the widget tree
         setState(() {
           isLoading = false;
         });
@@ -92,6 +87,7 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
           videoPlayerController: _videoPlayerController,
         );
       }).catchError((error) {
+        if (!mounted) return; // Check if the widget is still in the widget tree
         handleError('Failed to initialize video player: $error');
       });
   }
@@ -213,11 +209,11 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
 
   @override
   void dispose() {
-    // Check if _customVideoPlayerController has been initialized
+    _videoPlayerController.dispose();
+
     if (_customVideoPlayerController != null) {
       _customVideoPlayerController.dispose();
     }
-    _videoPlayerController.dispose();
     super.dispose();
   }
 
@@ -225,14 +221,18 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Play Recording'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.share),
-            onPressed:
-                videoUrl == null ? null : () => shareVideoLink(videoUrl!),
-          ),
-        ],
+        title: Text(widget.isLocalFile
+            ? 'Playing from Downloaded File'
+            : 'Play Recording'),
+        actions: widget.isLocalFile
+            ? []
+            : [
+                IconButton(
+                  icon: Icon(Icons.share),
+                  onPressed:
+                      videoUrl == null ? null : () => shareVideoLink(videoUrl!),
+                ),
+              ],
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -247,69 +247,71 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
                         customVideoPlayerController:
                             _customVideoPlayerController,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 50),
-                        child: FFButtonWidget(
-                          onPressed: videoUrl == null
-                              ? null
-                              : () => shareVideoLink(videoUrl!),
-                          text: 'Share Recording',
-                          options: FFButtonOptions(
-                            width: MediaQuery.sizeOf(context).width * 0.5,
-                            height: 40,
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-                            iconPadding:
-                                EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                            color: FlutterFlowTheme.of(context).primary,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .override(
-                                  fontFamily: 'Readex Pro',
-                                  color: Colors.white,
-                                ),
-                            elevation: 3,
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                              width: 1,
+                      if (!widget.isLocalFile) ...[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 50),
+                          child: FFButtonWidget(
+                            onPressed: videoUrl == null
+                                ? null
+                                : () => shareVideoLink(videoUrl!),
+                            text: 'Share Recording',
+                            options: FFButtonOptions(
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              height: 40,
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+                              iconPadding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                              color: FlutterFlowTheme.of(context).primaryColor,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .copyWith(
+                                    fontFamily: 'Readex Pro',
+                                    color: Colors.white,
+                                  ),
+                              elevation: 3,
+                              borderSide: BorderSide(
+                                color: Colors.transparent,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: FFButtonWidget(
-                          onPressed: videoUrl == null
-                              ? null
-                              : () => downloadFile(videoUrl!),
-                          text: localFilePath == null
-                              ? 'Download Recording'
-                              : 'Downloaded',
-                          value: isDownloading ? downloadProgress : null,
-                          options: FFButtonOptions(
-                            width: MediaQuery.sizeOf(context).width * 0.5,
-                            height: 40,
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-                            iconPadding:
-                                EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                            color: FlutterFlowTheme.of(context).primary,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .override(
-                                  fontFamily: 'Readex Pro',
-                                  color: Colors.white,
-                                ),
-                            elevation: 3,
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                              width: 1,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: FFButtonWidget(
+                            onPressed: videoUrl == null
+                                ? null
+                                : () => downloadFile(videoUrl!),
+                            text: localFilePath == null
+                                ? 'Download Recording'
+                                : 'Downloaded',
+                            value: isDownloading ? downloadProgress : null,
+                            options: FFButtonOptions(
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              height: 40,
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+                              iconPadding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                              color: FlutterFlowTheme.of(context).primaryColor,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .copyWith(
+                                    fontFamily: 'Readex Pro',
+                                    color: Colors.white,
+                                  ),
+                              elevation: 3,
+                              borderSide: BorderSide(
+                                color: Colors.transparent,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                      )
+                      ]
                     ],
                   ),
                 ),
