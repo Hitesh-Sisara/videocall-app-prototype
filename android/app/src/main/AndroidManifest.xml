@@ -13,11 +13,15 @@
       <!-- This is required if the application uses foreground service for android 14 and above-->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
-  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:label="protoype"
         tools:replace="android:label"
         android:icon="@mipmap/ic_launcher"
+        
         android:requestLegacyExternalStorage="true">
 
         <activity

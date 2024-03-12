@@ -112,7 +112,7 @@ class _RecordingsPageState extends State<RecordingsPage> {
                     ),
               ),
               Container(
-                  height: MediaQuery.sizeOf(context).height * 0.7,
+                  height: MediaQuery.sizeOf(context).height * 0.69,
                   child: RecordingsList(username: widget.username)),
             ],
           ),

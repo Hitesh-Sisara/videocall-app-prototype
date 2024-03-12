@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:call_prototype/custom_code/widgets/DownloadedRecordings.dart';
 import 'package:call_prototype/custom_code/widgets/api.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_theme.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_util.dart';
@@ -128,11 +129,11 @@ class _RecordingsListState extends State<RecordingsList> {
     return !isLoading
         ? recordings.isNotEmpty
             ? Container(
-                height: MediaQuery.sizeOf(context).height * 0.62,
+                height: MediaQuery.sizeOf(context).height * 0.5,
                 child: Column(
                   children: [
                     Container(
-                      height: MediaQuery.sizeOf(context).height * 0.62,
+                      height: MediaQuery.sizeOf(context).height * 0.5,
                       padding: EdgeInsets.all(16),
                       child: ListView.builder(
                         itemCount: recordings.length,
@@ -228,6 +229,34 @@ class _RecordingsListState extends State<RecordingsList> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: FFButtonWidget(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => DownloadedRecordingsScreen(),
+                          ));
+                        },
+                        text: 'Downloaded Recordings',
+                        options: FFButtonOptions(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          height: 40,
+                          padding: EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+                          color: FlutterFlowTheme.of(context).primary,
+                          textStyle:
+                              FlutterFlowTheme.of(context).titleSmall.override(
+                                    fontFamily: 'Readex Pro',
+                                    color: Colors.white,
+                                  ),
+                          elevation: 3,
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               )
@@ -266,6 +295,34 @@ class _RecordingsListState extends State<RecordingsList> {
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: FFButtonWidget(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => DownloadedRecordingsScreen(),
+                          ));
+                        },
+                        text: 'Downloaded Recordings',
+                        options: FFButtonOptions(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          height: 40,
+                          padding: EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+                          color: FlutterFlowTheme.of(context).primary,
+                          textStyle:
+                              FlutterFlowTheme.of(context).titleSmall.override(
+                                    fontFamily: 'Readex Pro',
+                                    color: Colors.white,
+                                  ),
+                          elevation: 3,
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                     ),
                   ],

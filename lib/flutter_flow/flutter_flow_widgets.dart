@@ -55,6 +55,7 @@ class FFButtonWidget extends StatefulWidget {
     this.iconData,
     required this.options,
     this.showLoadingIndicator = true,
+    this.value,
   });
 
   final String text;
@@ -63,6 +64,7 @@ class FFButtonWidget extends StatefulWidget {
   final Function()? onPressed;
   final FFButtonOptions options;
   final bool showLoadingIndicator;
+  final double? value;
 
   @override
   State<FFButtonWidget> createState() => _FFButtonWidgetState();
@@ -81,6 +83,7 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
               width: 23,
               height: 23,
               child: CircularProgressIndicator(
+                value: widget.value,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   widget.options.textStyle!.color ?? Colors.white,
                 ),
