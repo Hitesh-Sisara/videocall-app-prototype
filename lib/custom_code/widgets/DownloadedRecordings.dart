@@ -21,7 +21,12 @@ class _DownloadedRecordingsScreenState
 
   Future<void> _loadDownloadedRecordings() async {
     final directory = await getApplicationDocumentsDirectory();
+
+    debugPrint('Directory: ${directory.path}');
+
     final downloadedFiles = directory.listSync();
+    debugPrint('Downloaded Files: $downloadedFiles');
+
     final recordings = downloadedFiles
         .where((file) => file.path.endsWith('.mp4'))
         .map((file) => file.path)
@@ -29,6 +34,8 @@ class _DownloadedRecordingsScreenState
     setState(() {
       downloadedRecordings = recordings;
     });
+
+    debugPrint('Recordings: $recordings');
   }
 
   @override
@@ -37,33 +44,40 @@ class _DownloadedRecordingsScreenState
       appBar: AppBar(
         title: Text('Downloaded Recordings'),
       ),
-      body: ListView.builder(
-        itemCount: downloadedRecordings.length,
-        itemBuilder: (context, index) {
-          final recordingPath = downloadedRecordings[index];
-          return Padding(
-            padding: const EdgeInsets.all(16),
-            child: ListTile(
-              title: Text(
-                'Recording ${index + 1}',
-                style: TextStyle(
-                    fontFamily: 'Readex Pro',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).primaryColor),
+      body: downloadedRecordings.isEmpty
+          ? Center(child: Text('No recordings found'))
+          : ListView(
+              children: List.generate(
+                downloadedRecordings.length,
+                (index) {
+                  final recordingPath = downloadedRecordings[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: ListTile(
+                      title: Text(
+                        'Recording ${index + 1}',
+                        style: TextStyle(
+                          fontFamily: 'Readex Pro',
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      trailing: Icon(Icons.arrow_forward,
+                          size: 30, color: Colors.blue),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => PlayRecordingScreen(
+                            recordingId: recordingPath,
+                            isLocalFile: true,
+                          ),
+                        ));
+                      },
+                    ),
+                  );
+                },
               ),
-              trailing: Icon(Icons.arrow_forward,
-                  size: 30, color: Theme.of(context).primaryColor),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => PlayRecordingScreen(
-                      recordingId: recordingPath, isLocalFile: true),
-                ));
-              },
             ),
-          );
-        },
-      ),
     );
   }
 }
