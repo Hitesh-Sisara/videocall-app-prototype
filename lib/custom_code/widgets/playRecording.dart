@@ -11,7 +11,8 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'dart:html' as html;
+import 'package:url_launcher/url_launcher.dart';
+// import 'dart:html' as html;
 
 class PlayRecordingScreen extends StatefulWidget {
   final String recordingId;
@@ -46,15 +47,15 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
     }
   }
 
-  void downloadVideoForWeb(String url) {
-    html.AnchorElement anchorElement = new html.AnchorElement(href: url);
-    anchorElement.download = url;
-    anchorElement.click();
-    // // Use dart:html to create an anchor element for downloading
-    // final html.AnchorElement anchor = html.AnchorElement(href: url)
-    //   ..setAttribute("download", "video.mp4") // Suggest a file name for saving
-    //   ..click(); // Programmatically click the anchor to start the download
-  }
+  // void downloadVideoForWeb(String url) {
+  //   html.AnchorElement anchorElement = new html.AnchorElement(href: url);
+  //   anchorElement.download = url;
+  //   anchorElement.click();
+  //   // // Use dart:html to create an anchor element for downloading
+  //   // final html.AnchorElement anchor = html.AnchorElement(href: url)
+  //   //   ..setAttribute("download", "video.mp4") // Suggest a file name for saving
+  //   //   ..click(); // Programmatically click the anchor to start the download
+  // }
 
   Future<void> checkForLocalFile() async {
     final directory = await getApplicationDocumentsDirectory();
@@ -148,7 +149,9 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
 
   Future<void> downloadFile(String url) async {
     if (kIsWeb) {
-      downloadVideoForWeb(url);
+      var link = Uri.parse(url);
+      await launchUrl(link);
+      // downloadVideoForWeb(url);
       return;
     }
     final status = await Permission.storage.request();
