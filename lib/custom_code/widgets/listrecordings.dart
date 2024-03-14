@@ -178,7 +178,7 @@ class _RecordingsListState extends State<RecordingsList> {
                                   fontFamily: 'Readex Pro',
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500,
-                                  color: Theme.of(context).primaryColor),
+                                  color: Colors.blue),
                             ),
                             subtitle: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -208,8 +208,7 @@ class _RecordingsListState extends State<RecordingsList> {
                               ],
                             ),
                             trailing: Icon(Icons.arrow_forward,
-                                size: 30,
-                                color: Theme.of(context).primaryColor),
+                                size: 30, color: Colors.blue),
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => PlayRecordingScreen(
