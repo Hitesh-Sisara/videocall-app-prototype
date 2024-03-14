@@ -12,7 +12,6 @@ import '/flutter_flow/flutter_flow_theme.dart';
 // Imports custom functions
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:html' as html;
 
 // Begin custom widget code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!

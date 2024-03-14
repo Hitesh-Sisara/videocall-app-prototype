@@ -59,9 +59,12 @@ class _RecordingsListState extends State<RecordingsList> {
       // );
 
       final response = await http.get(
-          Uri.parse(
-              'https://api.100ms.live/v2/recording-assets?limit=50&type=room-composite'),
-          headers: {'Authorization  ': 'Bearer $managementToken'});
+        Uri.parse(
+            'https://api.100ms.live/v2/recording-assets?limit=50&type=room-composite'),
+        headers: {
+          'Authorization': 'Bearer $managementToken',
+        },
+      );
 
       debugPrint('recording Response: ${response.body}');
 
