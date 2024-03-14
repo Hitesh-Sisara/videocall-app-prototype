@@ -1,4 +1,4 @@
-# video call app prototype for client
+# video call app prototype
 
 
 
