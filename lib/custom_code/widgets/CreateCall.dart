@@ -6,6 +6,7 @@ import 'package:call_prototype/flutter_flow/flutter_flow_util.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
 // Imports custom functions
@@ -293,7 +294,11 @@ class _CreateCallState extends State<CreateCall> {
                       if (hostroomCode != null) {
                         if (kIsWeb) {
                           var link = generateHostRoomLink(hostroomCode);
-                          html.window.open(link, 'new tab');
+                          var roomlink = Uri.parse(link);
+
+                          await launchUrl(roomlink);
+
+                          // html.window.open(link, 'new tab');
                         }
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => Room(
