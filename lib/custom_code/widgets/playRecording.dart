@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:appinio_video_player/appinio_video_player.dart';
 import 'package:call_prototype/custom_code/widgets/api.dart';
@@ -6,11 +5,13 @@ import 'package:call_prototype/flutter_flow/flutter_flow_theme.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_util.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'dart:html' as html;
 
 class PlayRecordingScreen extends StatefulWidget {
   final String recordingId;
@@ -43,6 +44,16 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
     } else {
       fetchVideoUrl();
     }
+  }
+
+  void downloadVideoForWeb(String url) {
+    html.AnchorElement anchorElement = new html.AnchorElement(href: url);
+    anchorElement.download = url;
+    anchorElement.click();
+    // // Use dart:html to create an anchor element for downloading
+    // final html.AnchorElement anchor = html.AnchorElement(href: url)
+    //   ..setAttribute("download", "video.mp4") // Suggest a file name for saving
+    //   ..click(); // Programmatically click the anchor to start the download
   }
 
   Future<void> checkForLocalFile() async {
@@ -101,6 +112,11 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
         headers: {'Authorization': 'Bearer $managementToken'},
       );
 
+      // final response = await http.get(
+      //   Uri.parse(
+      //       'https://my-proxy-server-6onm.onrender.com/api/proxy?url=https://api.100ms.live/v2/recording-assets/${widget.recordingId}/presigned-url&token=$managementToken'),
+      // );
+
       debugPrint('Response: ${response.body}');
 
       if (response.statusCode == 200) {
@@ -131,6 +147,10 @@ class _PlayRecordingScreenState extends State<PlayRecordingScreen> {
   }
 
   Future<void> downloadFile(String url) async {
+    if (kIsWeb) {
+      downloadVideoForWeb(url);
+      return;
+    }
     final status = await Permission.storage.request();
     if (status.isGranted) {
       final directory = await getApplicationDocumentsDirectory();

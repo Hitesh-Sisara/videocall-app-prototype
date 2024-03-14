@@ -108,7 +108,11 @@ class _CreateCallWidgetState extends State<CreateCallWidget> {
               ),
               Container(
                   height: MediaQuery.sizeOf(context).height * 0.6,
-                  child: ActiveSessionsList(username: widget.username)),
+                  child: ActiveSessionsList(
+                    username: widget.username,
+                    height: 0,
+                    width: 0,
+                  )),
               Container(
                 width: MediaQuery.sizeOf(context).width * 0.5,
                 height: 40,

@@ -4,12 +4,14 @@ import 'package:call_prototype/custom_code/widgets/api.dart';
 import 'package:call_prototype/custom_code/widgets/room.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_util.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
 // Imports custom functions
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:html' as html;
 
 // Begin custom widget code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -56,6 +58,10 @@ class _CreateCallState extends State<CreateCall> {
 
   String generateRoomLink(String? code) {
     return 'https://hit-livestream-1315.app.100ms.live/streaming/meeting/$code';
+  }
+
+  String generateHostRoomLink(String? code) {
+    return 'https://hit-livestream-1315.app.100ms.live/streaming/meeting/$code?username=${widget.username}';
   }
 
   Future<void> createRoom(String username) async {
@@ -285,6 +291,10 @@ class _CreateCallState extends State<CreateCall> {
                   FFButtonWidget(
                     onPressed: () async {
                       if (hostroomCode != null) {
+                        if (kIsWeb) {
+                          var link = generateHostRoomLink(hostroomCode);
+                          html.window.open(link, 'new tab');
+                        }
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => Room(
                                   username: widget.username,

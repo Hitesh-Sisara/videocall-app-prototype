@@ -5,6 +5,7 @@ import 'package:call_prototype/custom_code/widgets/api.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_theme.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_util.dart';
 import 'package:call_prototype/flutter_flow/flutter_flow_widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import './playRecording.dart';
@@ -45,16 +46,24 @@ class _RecordingsListState extends State<RecordingsList> {
   }
 
   Future<void> fetchRecordings() async {
+    // var managementToken =
+    //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3Nfa2V5IjoiNjU5YzNiMWVjZDk5M2RmYjQ0YWE0ZGYzIiwidHlwZSI6Im1hbmFnZW1lbnQiLCJ2ZXJzaW9uIjoyLCJpYXQiOjE3MDk4MTk5MDIsIm5iZiI6MTcwOTgxOTkwMiwiZXhwIjoxNzUzMDE5OTAyLCJqdGkiOiI4MzA1MmUxYS00Y2RiLTQ1M2QtYWJjYi03NDQxMDE4YWY5NGYifQ.4C12dNChAqbq05xdzzic-z6ZiF6l92hn1YFeK1Cqeqc";
     setState(() {
       isLoading = true;
     });
 
     try {
+      // final response = await http.get(
+      //   Uri.parse(
+      //       'https://my-proxy-server-6onm.onrender.com/api/proxy?url=https://api.100ms.live/v2/recording-assets?limit=50&type=room-composite&token=$managementToken'),
+      // );
+
       final response = await http.get(
-        Uri.parse(
-            'https://api.100ms.live/v2/recording-assets?limit=50&type=room-composite'),
-        headers: {'Authorization': 'Bearer $managementToken'},
-      );
+          Uri.parse(
+              'https://api.100ms.live/v2/recording-assets?limit=50&type=room-composite'),
+          headers: {'Authorization  ': 'Bearer $managementToken'});
+
+      debugPrint('recording Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -75,6 +84,11 @@ class _RecordingsListState extends State<RecordingsList> {
               Uri.parse('https://api.100ms.live/v2/rooms/$roomId'),
               headers: {'Authorization': 'Bearer $managementToken'},
             );
+
+            // final roomResponse = await http.get(
+            //   Uri.parse(
+            //       'https://my-proxy-server-6onm.onrender.com/api/proxy?url=https://api.100ms.live/v2/rooms/$roomId&token=$managementToken'),
+            // );
 
             if (roomResponse.statusCode == 200) {
               final roomData = jsonDecode(roomResponse.body);
@@ -297,34 +311,38 @@ class _RecordingsListState extends State<RecordingsList> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: FFButtonWidget(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => DownloadedRecordingsScreen(),
-                          ));
-                        },
-                        text: 'Downloaded Recordings',
-                        options: FFButtonOptions(
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          height: 40,
-                          padding: EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-                          color: FlutterFlowTheme.of(context).primary,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Readex Pro',
-                                    color: Colors.white,
-                                  ),
-                          elevation: 3,
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 1,
+                    if (!kIsWeb) // This line checks if the platform is not web
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: FFButtonWidget(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  DownloadedRecordingsScreen(),
+                            ));
+                          },
+                          text: 'Downloaded Recordings',
+                          options: FFButtonOptions(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            height: 40,
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
+                                .override(
+                                  fontFamily: 'Readex Pro',
+                                  color: Colors.white,
+                                ),
+                            elevation: 3,
+                            borderSide: BorderSide(
+                              color: Colors.transparent,
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                    ),
                   ],
                 ),
               )

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors_in_immutables
+
 import 'dart:convert';
 
 import 'package:call_prototype/custom_code/widgets/api.dart';
@@ -32,9 +34,16 @@ class ActiveSession {
 }
 
 class ActiveSessionsList extends StatefulWidget {
-  ActiveSessionsList({Key? key, required this.username}) : super(key: key);
+  ActiveSessionsList(
+      {Key? key,
+      required this.username,
+      required this.height,
+      required this.width})
+      : super(key: key);
 
   final String username;
+  final double height;
+  final double width;
   @override
   _ActiveSessionsListState createState() => _ActiveSessionsListState();
 }
@@ -131,10 +140,10 @@ class _ActiveSessionsListState extends State<ActiveSessionsList> {
                                   fontFamily: 'Readex Pro',
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500,
-                                  color: Theme.of(context).primaryColor),
+                                  color: Colors.blue),
                             ),
                             subtitle: Text(
-                              "Live since ${_formatDuration(liveDuration)}",
+                              "Lilievve since ${_formatDuration(liveDuration)}",
                               style: TextStyle(
                                   fontFamily: 'Readex Pro',
                                   fontSize: 16,
